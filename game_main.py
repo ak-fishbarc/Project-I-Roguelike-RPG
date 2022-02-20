@@ -33,13 +33,22 @@ class GameMain:
         self.__levels = {}
         self.__current_level = None
         self.__dead_entities = {}
+        self.__running = False
 
     #############################
     # Basic operation functions #
     #############################
+    def run(self):
+        self.__running = True
+
+    def pause(self):
+        self.__running = False
 
     def delete_levels(self):
         self.__levels = {}
+
+    def return_run(self):
+        return self.__running
 
     def return_levels(self) -> dict:
         return self.__levels
@@ -124,6 +133,10 @@ Type: \n \
                                    data['spirit'], data['mind'])
         return new_entity
 
+    def create_player(self) -> object:
+        new_player = em.PlayerModel(1, 1, ' P ', 'PC1', 'pc1', 'player', 6, 6, 6, 6, 6)
+
+        return new_player
     #################################################################
     # populate_map can create new entity and look for an empty      #
     # random position on the map.                                   #
@@ -248,6 +261,25 @@ Type: \n \
         place_entities = self.__current_level.return_entities()
         for entity in place_entities:
             self.position_entity(entity)
+        single_player = self.create_player()
+        self.__current_level.add_player(single_player)
+        self.position_entity(single_player)
+        print(self.draw_map())
+        self.run()
+
+    def player_move(self):
+        player = self.__current_level.return_players()[0]
+        pcords = player.return_position()
+        player.move_player()
+        new_cords = player.return_position()
+        if self.__current_level.if_cell_empty(new_cords[0], new_cords[1]):
+            self.__current_level.remove_entity(pcords[0], pcords[1], player.return_map_model())
+            self.position_entity(player)
+        else:
+            player.set_positions(pcords[0], pcords[1])
+
+    def turn(self):
+        self.player_move()
         print(self.draw_map())
 
 
