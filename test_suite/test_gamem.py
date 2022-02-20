@@ -44,6 +44,9 @@ class TestGame(unittest.TestCase):
 
     def test_start_game(self):
         self.TestGame.start_game()
+        while self.TestGame.return_run():
+            self.TestGame.turn()
+
 
     """
     def test_sockets(self):
