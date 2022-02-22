@@ -167,7 +167,7 @@ class EnemyModel(EntityModel):
         return self.__target
 
     def return_kind(self) -> str:
-        return "Enemy"
+        return "enemy"
 
     def return_hp(self) -> int:
         return self.__hp
@@ -188,8 +188,6 @@ class EnemyModel(EntityModel):
                 self.move_leftright(1)
             elif target_pos[1] < my_pos[1]:
                 self.move_leftright(-1)
-            if my_pos == target_pos:
-                self.__target.take_damage(self.return_name(), self.__atk)
 
     def take_damage(self, dmg: int):
         self.__hp -= dmg
