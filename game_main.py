@@ -267,19 +267,37 @@ Type: \n \
         print(self.draw_map())
         self.run()
 
-    def player_move(self):
-        player = self.__current_level.return_players()[0]
-        pcords = player.return_position()
-        player.move_player()
-        new_cords = player.return_position()
+    def entity_move(self, entity):
+        agent = entity
+        target = None
+
+        acords = agent.return_position()
+        if entity.return_kind() == 'player':
+            agent.move_player()
+        elif entity.return_kind() == 'enemy':
+            agent.search_and_destroy()
+            target = agent.return_target()
+        new_cords = agent.return_position()
+        self.check_position(acords, new_cords, agent, target)
+
+    def check_position(self, acords: tuple, new_cords: tuple, agent: object, target: object):
         if self.__current_level.if_cell_empty(new_cords[0], new_cords[1]):
-            self.__current_level.remove_entity(pcords[0], pcords[1], player.return_map_model())
-            self.position_entity(player)
+            self.__current_level.remove_entity(acords[0], acords[1], agent.return_map_model())
+            self.position_entity(agent)
+        elif not self.__current_level.if_cell_empty(new_cords[0], new_cords[1]) and target is not None:
+            if new_cords == target.return_position():
+                target.take_damage(agent.return_name(), agent.return_atk())
+                agent.set_positions(acords[0], acords[1])
         else:
-            player.set_positions(pcords[0], pcords[1])
+            agent.set_positions(acords[0], acords[1])
 
     def turn(self):
-        self.player_move()
+        player = self.__current_level.return_players()[0]
+        self.entity_move(player)
+        for entity in self.__current_level.return_entities():
+            entity.set_target(player)
+            self.entity_move(entity)
+
         print(self.draw_map())
 
 
