@@ -28,6 +28,7 @@ from random import randint
 # using up the memory.                                    #
 ###########################################################
 
+
 class GameMain:
     def __init__(self):
         self.__levels = {}
