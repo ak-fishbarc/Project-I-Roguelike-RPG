@@ -267,6 +267,11 @@ Type: \n \
         print(self.draw_map())
         self.run()
 
+    def find_entity(self, posx: int, posy: int) -> object:
+        for entity in self.__current_level.return_entities():
+            if entity.return_position() == (posx, posy):
+                return entity
+
     def entity_move(self, entity):
         agent = entity
         target = None
@@ -278,16 +283,25 @@ Type: \n \
             agent.search_and_destroy()
             target = agent.return_target()
         new_cords = agent.return_position()
-        self.check_position(acords, new_cords, agent, target)
+        self.check_position(acords, new_cords, agent)
 
-    def check_position(self, acords: tuple, new_cords: tuple, agent: object, target: object):
+    def check_position(self, acords: tuple, new_cords: tuple, agent: object):
         if self.__current_level.if_cell_empty(new_cords[0], new_cords[1]):
             self.__current_level.remove_entity(acords[0], acords[1], agent.return_map_model())
             self.position_entity(agent)
-        elif not self.__current_level.if_cell_empty(new_cords[0], new_cords[1]) and target is not None:
-            if new_cords == target.return_position():
-                target.take_damage(agent.return_name(), agent.return_atk())
-                agent.set_positions(acords[0], acords[1])
+        elif not self.__current_level.if_cell_empty(new_cords[0], new_cords[1]):
+            if agent.return_kind() == "enemy":
+                if new_cords == agent.return_target().return_position():
+                    agent.return_target().take_damage(agent.return_name(), agent.return_atk())
+                    agent.set_positions(acords[0], acords[1])
+                else:
+                    agent.set_positions(acords[0], acords[1])
+            elif agent.return_kind() == "player":
+                if self.find_entity(new_cords[0], new_cords[1]):
+                    self.find_entity(new_cords[0], new_cords[1]).take_damage(agent.return_atk())
+                    agent.set_positions(acords[0], acords[1])
+                else:
+                    agent.set_positions(acords[0], acords[1])
         else:
             agent.set_positions(acords[0], acords[1])
 
