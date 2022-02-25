@@ -1,5 +1,4 @@
 import math
-from platform import python_version
 
 ###################################################
 # Pathfinding and in future hopefully cooperation #
