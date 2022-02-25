@@ -41,6 +41,5 @@ class TestAI(unittest.TestCase):
         self.new_brain.find_path(self.level, (1, 1))
 
 
-
 if __name__ == "__main__":
     unittest.main()

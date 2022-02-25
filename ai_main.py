@@ -30,21 +30,18 @@ class Brain:
         current_path = []
         start_x = self.__owner.return_position()[0]
         start_y = self.__owner.return_position()[1]
-        current_path.append((start_x, start_y))
 
         while (start_x, start_y) != goal:
             self.draw_map(map_structure)
             try_pointer = self.move_pointer(map_structure, start_x, start_y)
-            if try_pointer not in current_path:
+
+            if try_pointer != (start_x, start_y) and try_pointer not in current_path:
                 current_path.append((start_x, start_y))
                 start_x, start_y = try_pointer[0], try_pointer[1]
             else:
-                n = 1
-                while try_pointer in current_path:
-                    start_x = current_path[0-n][0]
-                    start_y = current_path[0-n][1]
-                    try_pointer = self.move_pointer(map_structure, start_x, start_y)
-                    n += 1
+                go_back = current_path.pop()
+                start_x = go_back[0]
+                start_y = go_back[1]
 
             map_structure[start_x][start_y] = " x "
 
