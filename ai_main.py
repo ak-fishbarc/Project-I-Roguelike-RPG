@@ -6,6 +6,7 @@ from platform import python_version
 # between brains' owners.                         #
 ###################################################
 
+
 class Brain:
     def __init__(self):
         self.__owner = None
@@ -112,11 +113,12 @@ class Brain:
                 self.draw_map(map_structure)
                 self.__route = current_path
 
-
     ##################################
     # Only for illustration purpose  #
     ##################################
+
     def draw_map(self, map_structure):
+
         draw = ""
         for x in map_structure:
             for y in x:
