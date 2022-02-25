@@ -1,10 +1,10 @@
 import math
 
-
 ###################################################
 # Pathfinding and in future hopefully cooperation #
 # between brains' owners.                         #
 ###################################################
+
 
 class Brain:
     def __init__(self):
@@ -41,9 +41,17 @@ class Brain:
         # out of step.                                                    #
         ###################################################################
         for step in route:
-            if math.dist(step, route[-1]) < math.dist(pointer, route[-1]):
-                pointer = step
-                evaluated_route.append(pointer)
+            try:
+                if math.dist(step, route[-1]) < math.dist(pointer, route[-1]):
+                    pointer = step
+                    evaluated_route.append(pointer)
+            except AttributeError:
+                def distance(param1: tuple, param2: tuple):
+                    result = ((param1[0] - param2[0])**2 + (param1[1] - param2[1])**2)
+                    return result
+                if math.sqrt(distance(step, route[-1])) < math.sqrt(distance(pointer, route[-1])):
+                    pointer = step
+                    evaluated_route.append(pointer)
 
         ###########################################
         # Added only for illustration.            #
@@ -97,7 +105,6 @@ class Brain:
             # Clear up the map and add new route for the brain's owner to follow. #
             #######################################################################
             if (start_x, start_y) == goal:
-                print('Found it')
                 for pos in clear_up:
                     map_structure[pos[0]][pos[1]] = "   "
                 for pos in current_path:
@@ -105,11 +112,12 @@ class Brain:
                 self.draw_map(map_structure)
                 self.__route = current_path
 
-
     ##################################
     # Only for illustration purpose  #
     ##################################
+
     def draw_map(self, map_structure):
+
         draw = ""
         for x in map_structure:
             for y in x:
