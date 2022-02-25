@@ -20,8 +20,10 @@ class TestAI(unittest.TestCase):
         for n in range(0, 7):
             self.level[n][0] = " # "
             self.level[n][7 - 1] = " # "
+
         for n in range(0, 4):
             self.level[n][3] = " # "
+        self.level[2][3] = " # "
         self.level[4][4] = " # "
         self.level[4][3] = " # "
 
@@ -39,7 +41,7 @@ class TestAI(unittest.TestCase):
     def test_find_path(self):
         self.build_obstacles()
         self.new_brain.find_path(self.level, (1, 1))
-
+        self.new_brain.evaluate_route(self.new_brain.return_route(), self.level)
 
 if __name__ == "__main__":
     unittest.main()
